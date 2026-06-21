@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.backends.legacy:build"
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "tristate-agent"
@@ -10,47 +10,43 @@ readme = "README.md"
 license = {file = "LICENSE"}
 requires-python = ">=3.9"
 authors = [
-  {name = "fkpkiva", email = ""}
+    {name = "fkpkiva", email = ""}
 ]
 keywords = [
-  "llm", "ai-agents", "memory", "context-management",
-  "multi-agent", "tristate", "sword-pipeline", "context-window",
-  "long-context", "conversation"
+    "llm", "ai-agents", "memory", "context-management",
+    "multi-agent", "tristate", "sword-pipeline", "context-window",
+    "long-context", "conversation"
 ]
 classifiers = [
-  "Development Status :: 3 - Alpha",
-  "Intended Audience :: Developers",
-  "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: MIT License",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
-dependencies = [
-  "openai>=1.0",
-  "numpy>=1.24",
-]
+dependencies = []
 
 [project.optional-dependencies]
 dev = [
-  "pytest>=7.0",
-  "pytest-cov",
+    "pytest>=7.0",
 ]
+openai = [
+    "openai>=1.0",
+]
+numpy = [
+    "numpy>=1.24",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["tristate_agent*"]
 
 [project.urls]
 Homepage = "https://github.com/fkpkiva/tristate-agent"
 Repository = "https://github.com/fkpkiva/tristate-agent"
 Changelog = "https://github.com/fkpkiva/tristate-agent/blob/main/CHANGELOG.md"
-Protocol = "https://github.com/fkpkiva/tristate-agent/blob/main/PROTOCOL.md"
-
-[tool.setuptools.packages.find]
-include = ["tristate_agent*"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
