@@ -10,6 +10,11 @@ from .agent_node import AgentNode
 from .domain_profiles import get_domain_profile, DEFAULT_DOMAIN
 from .drift import compute_drift_score, cosine_similarity
 
+# Tristate labels per PROTOCOL.md
+_STATE_ACTIVE = "1"
+_STATE_DORMANT = "Z"
+_STATE_TERMINATED = "0"
+
 
 class TristateOrchestrator:
     """
@@ -46,7 +51,6 @@ class TristateOrchestrator:
 
     def _spawn_new_agent(self, topic_label: str = "") -> AgentNode:
         """Create a new AgentNode and make it active."""
-        # Sleep the current active agent first
         current = self._active_agent()
         current.sleep()
         aid = self._new_agent_id()
@@ -59,10 +63,10 @@ class TristateOrchestrator:
 
     @staticmethod
     def _agent_state_label(agent: AgentNode) -> str:
-        """Return human-readable tristate label for an agent."""
+        """Return PROTOCOL tristate label: 1=active, Z=dormant, 0=terminated."""
         if agent.is_active:
-            return "active"
-        return "dormant"
+            return _STATE_ACTIVE
+        return _STATE_DORMANT
 
     # ------------------------------------------------------------------
     # Three-layer wake detection (Section 6)
@@ -83,7 +87,6 @@ class TristateOrchestrator:
         has_verbal_cue = any(cue in msg_lower for cue in verbal_cues)
         for aid in reversed(self.agent_order):
             agent = self.agents[aid]
-            # Only consider sleeping (dormant) agents, not the active one
             if not agent.sleeping:
                 continue
             # Layer 1
@@ -117,7 +120,6 @@ class TristateOrchestrator:
         durability_ratio = self.profile.get("durability_ratio", 0.3)
         # Gate 1: semantic drift
         if drift_score < drift_threshold:
-            # Drift not high enough — reset any detour watch
             if agent.drift_marker is not None:
                 agent.drift_marker = None
             return False
@@ -145,7 +147,6 @@ class TristateOrchestrator:
         """
         if not detour_turns:
             return
-        # Build a compact research note
         note_content = "[detour-note] " + " | ".join(
             t.get("content", "") for t in detour_turns if t.get("role") == "user"
         )
@@ -170,7 +171,6 @@ class TristateOrchestrator:
         # 1. Check for wake signal to a dormant agent
         wake_id = self._try_wake_dormant(message, embedding)
         if wake_id is not None and wake_id != self.active_agent_id:
-            # Sleep current, wake target
             active.sleep()
             target = self.agents[wake_id]
             target.wake()
@@ -193,11 +193,9 @@ class TristateOrchestrator:
                 anchor_embedding=active.anchor_embedding,
                 recent_embeddings=recent or None,
             )
-            # Track shifted tokens
             drift_threshold = self.profile.get("drift_threshold", 0.4)
             if drift >= drift_threshold:
                 active.shifted_tokens += token_count
-            # Two-Gate check
             if self._check_spawn_gates(active, drift, embedding):
                 new_agent = self._spawn_new_agent(topic_label=topic_hint)
                 new_agent.anchor_embedding = embedding
