@@ -3,7 +3,6 @@ drift.py — Phi-decay weighted drift scoring.
 S step of the SWORD pipeline.
 Orchestrator uses this to detect topic shifts.
 """
-
 import math
 from typing import List, Optional
 
@@ -38,20 +37,16 @@ def phi_decay_drift_score(
     """
     if not recent_embeddings or not anchor_embedding:
         return 0.0
-
     total_weight = 0.0
     weighted_distance = 0.0
-
     for i, emb in enumerate(reversed(recent_embeddings)):
         weight = (1.0 / decay_rate) ** i
         similarity = cosine_similarity(emb, anchor_embedding)
         distance = 1.0 - similarity
         weighted_distance += weight * distance
         total_weight += weight
-
     if total_weight == 0:
         return 0.0
-
     return weighted_distance / total_weight
 
 
@@ -62,9 +57,17 @@ def compute_drift(
     decay_rate: float = PHI,
 ) -> float:
     """
-    Compute drift score for a new message.
-    Includes the new embedding in the recent window.
+    Compute drift score for a new message against the anchor topic.
+
+    If recent_embeddings provided, uses phi-decay weighting over history.
+    Otherwise falls back to direct cosine distance from anchor.
     """
-    window = list(recent_embeddings or [])
-    window.append(new_embedding)
-    return phi_decay_drift_score(window, anchor_embedding, decay_rate)
+    if recent_embeddings:
+        all_embeddings = recent_embeddings + [new_embedding]
+        return phi_decay_drift_score(all_embeddings, anchor_embedding, decay_rate)
+    similarity = cosine_similarity(new_embedding, anchor_embedding)
+    return 1.0 - similarity
+
+
+# Alias used by orchestrator and other modules
+compute_drift_score = compute_drift
