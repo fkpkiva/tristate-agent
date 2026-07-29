@@ -4,6 +4,23 @@ All notable changes to tristate-agent are documented here.
 
 ---
 
+## [0.2.0] - 2026-07-30
+
+### Added
+- `tristate_agent/agents.py` — `PhaseAwareAgent` base class with phase-aware drift
+  detection; `ResearchAgent`, `WritingAgent`, `ReviewAgent` specialisations
+- `tristate_agent/domain_profiles.py` — per-domain DRIFT_THRESHOLDS registry
+- `tristate_agent/embedder.py` — pluggable embedding layer; `NullEmbedder`,
+  `OllamaEmbedder`, `OpenAIEmbedder`, `make_embedder()` factory
+- `tristate_agent/session_store.py` — `SiloStore` RAG persistence (Chroma-ready)
+- `tristate_agent/orchestrator.py` — cross-branch handoff + micro-wake signals
+- `test_v02.py` — 8-case smoke suite (8/8 PASSED)
+
+### Changed
+- `AgentNode.__init__` now accepts `**_kwargs` for forward-compat with v0.2
+  subclass signatures
+- `__init__.py` exports updated with all v0.2 public symbols
+
 ## [0.1.0] — 2026-06-22
 
 ### Initial Protocol Release

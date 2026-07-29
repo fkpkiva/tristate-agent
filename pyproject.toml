@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tristate-agent"
-version = "0.1.0"
+version = "0.2.0"
 description = "LLM memory branching via tristate agents — SWORD conversation pipeline + SILO ingest pipeline"
 readme = "README.md"
 license = {file = "LICENSE"}
