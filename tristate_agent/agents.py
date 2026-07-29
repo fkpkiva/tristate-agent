@@ -59,6 +59,11 @@ class PhaseAwareAgent(AgentNode):
     self._phase: str = phase
     self._milestones: List[Dict[str, Any]] = []
     self._cross_branch_requests: List[Dict[str, Any]] = []
+    self.drift_gate = thresholds["drift_gate"]
+    self.durability_gate = thresholds["durability_gate"]
+    self.domain = domain
+    self.session_store = session_store
+    self.embed_fn = embed_fn
 
   # ------------------------------------------------------------------
   # Phase accessors

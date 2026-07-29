@@ -14,7 +14,7 @@ class AgentNode:
     States: active (1), dormant (Z), terminated (0).
     """
 
-    def __init__(self, agent_id: str, topic_label: str = ""):
+    def __init__(self, agent_id: str, topic_label: str = "", **_kwargs):
         self.agent_id = agent_id
         self.topic_label = topic_label
         self.sleeping: bool = False
