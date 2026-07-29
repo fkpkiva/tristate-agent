@@ -4,13 +4,14 @@ LLM memory branching via tristate agents.
 SWORD conversation pipeline + SILO ingest pipeline (v0.2).
 
 v0.2 additions: ResearchAgent, WritingAgent, ReviewAgent,
-PhaseAwareAgent, embedder utilities, phase-aware domain profiles.
+PhaseAwareAgent, embedder utilities, phase-aware domain profiles,
+SiloStore RAG ingest/query pipeline.
 """
 
 from .orchestrator import TristateOrchestrator
 from .agent_node import AgentNode
 from .parent_orchestrator import ParentOrchestrator
-from .session_store import SessionStore
+from .session_store import SessionStore, SiloStore
 
 # v0.2 specialised agents
 from .agents import (
@@ -50,6 +51,8 @@ __all__ = [
   "AgentNode",
   "ParentOrchestrator",
   "SessionStore",
+  # v0.2 SILO
+  "SiloStore",
   # v0.2 agents
   "PhaseAwareAgent",
   "ResearchAgent",
